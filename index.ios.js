@@ -6,81 +6,91 @@ import {
   StyleSheet,
   Text,
   View,
-  StatusBar
+  StatusBar,
+  Switch,
+  TouchableOpacity
 } from 'react-native';
 
 class MyNewApp extends Component {
-  render() {
+  constructor (props) {
+    super(props)
+    this.state = {
+      canLaunch: false,
+      showLaunch: false
+    }
+  }
+
+  renderLaunchImage () {
+    return (
+      <TouchableOpacity 
+        onPress={(value) => {this.setState({showLaunch: false})}}
+        style = {{flex: 1}}
+      >
+        <Image
+          style={styles.launchImage}
+          source={{uri: "https://s3.amazonaws.com/vigesharing-is-vigecaring/lkurtz/rnwksp-c4-launch.jpg"}}
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  renderLaunchScreen () {
     return (
       <View style={styles.container}>
-        <StatusBar 
-          barStyle= 'light-content'
-        />
-        <View style={styles.content}>
-          <Text style={styles.welcome}>
-            Challenge 3
-          </Text>
-          <Image
-            style={styles.targetImage}
-            source={require('./app/assets/images/mind-blown.gif')}
-          />
-          <View style={styles.textContainer}>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-              <Text style={styles.leftText}>
-                I'm on the 
-              </Text><Text style={{color: 'red'}}>left.</Text>
-            </View>
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-              <Text style={styles.rightText}>
-                I'm on the 
-              </Text><Text style={{color: 'blue'}}>right.</Text>
-            </View>
+        <Text style={styles.launchText}>
+          Launch Control
+        </Text>
+
+        <Switch
+          onValueChange = {(value) => {this.setState({canLaunch: value})}}
+          value = {this.state.canLaunch}
+        >
+        </Switch>
+
+        <TouchableOpacity 
+          onPress={(value) => {this.setState({showLaunch: true})}}
+          disabled={!this.state.canLaunch}
+        >
+          <View style={styles.launchButton}>
+            <Text style={styles.launchButtonText}>Launch!</Text>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
     );
+  }
+
+  render() {
+    if (this.state.showLaunch) {
+      return this.renderLaunchImage()
+    } else {
+      return this.renderLaunchScreen()
+    }
   }
 }
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
   container: {
     flex: 1,
-    backgroundColor: '#333333',
-    flexDirection: 'column'
-
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#eee',
   },
-  textContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-  },
-  leftText: {
-    color: 'white',
-  },
-  rightText: {
-    color: 'white'
-  },
-  welcome: {
+  launchText: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,
+    margin: 20,
+  },
+  launchButton: {
+    backgroundColor: 'red',
+    margin: 20,
+    padding: 20,
+    borderRadius: 10
+  },
+  launchButtonText: {
     color: 'white'
   },
-  instructions: {
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  targetImage: {
-    borderRadius: 50,
-    width: 100,
-    height: 100,
-    marginTop: 25,
-    borderColor: 'black',
-    borderWidth: 3
+  launchImage: {
+    flex: 1
   }
 });
 
